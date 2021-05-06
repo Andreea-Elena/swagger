@@ -112,11 +112,10 @@ paths:
   /database:
     get:
       operationId: "getCreateDatabase"
+      parameters: []
       responses:
-        "200":
+        "204":
           description: "Database created!"
-        "404":
-          description: "Database wasn't created"
       x-swagger-router-controller: "Default"
 definitions:
   Note:

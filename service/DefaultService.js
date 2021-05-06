@@ -1,8 +1,7 @@
 'use strict';
-var low	= require('lowdb');
-const db = low('db.json');
-
-var mongo = require('mongodb');
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://0.0.0.0:27017/mydb";
+var ObjectId = require('mongodb').ObjectId; 
 
 exports.getAllNotes = function(args, res, next) {
   /**
@@ -10,11 +9,15 @@ exports.getAllNotes = function(args, res, next) {
   **/
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;
-  res.end(JSON.stringify(db.get('notes').value()));
-}
-
-function uuid() {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    dbo.collection("notes").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      res.end(JSON.stringify(result));
+      db.close();
+    });
+  }); 
 }
 
 exports.postNote = function(args, res, next) {
@@ -25,13 +28,17 @@ exports.postNote = function(args, res, next) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 201;
 
-
-  var result = db.get('notes')
-	  .push({ id: uuid(), text: args.note.value.text })
-	  .value()
-    db.set(result).write()
-    res.end(JSON.stringify(result));
-
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var myobj = { text: args.note.value.text }
+    dbo.collection("notes").insertOne(myobj, function(err, res) {
+      if (err) throw err;
+      console.log("1 note inserted");
+      db.close();
+    });
+    res.end(JSON.stringify(myobj))
+  }); 
 }
 
 exports.getNotesById = function(args, res, next) {
@@ -46,7 +53,16 @@ exports.getNotesById = function(args, res, next) {
   }
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;
-  res.end(JSON.stringify(db.get('notes').find({ id: args.id.value }).value()));
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var query = { _id : new ObjectId(args.id.value)  };
+    dbo.collection("notes").find(query).toArray(function(err, result) {
+      if (err) throw err;
+      res.end(JSON.stringify(result));
+      db.close();
+    });
+  }); 
 }
 
 exports.putNotesById = function(args, res, next) {
@@ -110,21 +126,21 @@ exports.deleteNotesById = function(args, res, next) {
   res.end();
 }
 
-exports.getCreateDatabase = function(req, res, next) {
+exports.getCreateDatabase = async function(req, res, next) {
   /**
-   * parameters expected in the args:
-  * id (String)
-  * note (Note)
   **/
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 204;
-  var MongoClient = require('mongodb').MongoClient;
-  var url = "mongodb://0.0.0.0:27017/notes";
 
-  MongoClient.connect(url, function(err, db) {
+  await MongoClient.connect(url, function(err, database) {
     if (err) throw err;
     console.log("Database created!");
-    db.close(); 
+    var dbo = database.db("mydb");
+    dbo.createCollection("notes", function(err, res) {
+      if (err) throw err;
+      console.log("Notes created!");
+      database.close(); 
+    });
   });
-  res.end();
+  res.end('Database created!')
 }
