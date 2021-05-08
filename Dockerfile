@@ -1,6 +1,6 @@
 FROM node:9-slim
 WORKDIR /swagger
-COPY package.json ./swagger
+COPY ["package.json", "./swagger/"]
 RUN npm install
-COPY [".", "c:/swagger/"]
+COPY [".", "/swagger/"]
 CMD ["npm","start"]
