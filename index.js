@@ -7,6 +7,7 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
 var serverPort = 8080;
+var dockerServerPort = 9000;
 
 // swaggerRouter configuration
 var options = {
@@ -37,7 +38,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Start the server
   http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+    console.log('Your server is listening on port %d (http://localhost:%d)', dockerServerPort, dockerServerPort);
+    console.log('Swagger-ui is available on http://localhost:%d/docs', dockerServerPort);
   });
 });
