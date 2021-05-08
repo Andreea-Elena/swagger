@@ -77,12 +77,18 @@ exports.putNotesById = function(args, res, next) {
   }
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 201;
-  var result = db.get('notes')
-  	.find({ id: args.id.value })
-	  .assign({ text: args.note.value.text})
-	  .value()
-  db.set(result).write()
-  res.end(JSON.stringify(result));
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var myquery = { _id: new ObjectId(args.id.value) };
+    var newvalues = { $set: { text: args.note.value.text } };
+    dbo.collection("notes").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 note updated");
+      db.close();
+    });
+    res.end()
+  }); 
 }
 
 
@@ -99,12 +105,18 @@ exports.patchNotesById = function(args, res, next) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 201;
 
-  var result = db.get('notes')
-  	.find({ id: args.id.value })
-	  .assign({ text: args.note.value.text })
-	  .value()
-  db.set(result).write()
-  res.end(JSON.stringify(result));
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var myquery = { _id: new ObjectId(args.id.value) };
+    var newvalues = { $set: { text: args.note.value.text } };
+    dbo.collection("notes").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 note updated");
+      db.close();
+    });
+    res.end()
+  }); 
 }
 
 exports.deleteNotesById = function(args, res, next) {
@@ -119,11 +131,17 @@ exports.deleteNotesById = function(args, res, next) {
   }
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 204;
-  db.get('notes')
-	  .remove({ id: args.id.value })
-	  .value()
-  db.find({ id: args.id.value }).remove().write()
-  res.end();
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var myquery = { _id: new ObjectId(args.id.value) };
+    dbo.collection("notes").deleteOne(myquery, function(err, resp) {
+      if (err) res.end("Invalid id");
+      res.end("Note "+args.id.value+" deleted")
+      db.close();
+    });
+    res.end()
+  }); 
 }
 
 exports.getCreateDatabase = async function(req, res, next) {
@@ -132,15 +150,33 @@ exports.getCreateDatabase = async function(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 204;
 
-  await MongoClient.connect(url, function(err, database) {
-    if (err) throw err;
-    console.log("Database created!");
-    var dbo = database.db("mydb");
-    dbo.createCollection("notes", function(err, res) {
-      if (err) throw err;
-      console.log("Notes created!");
-      database.close(); 
-    });
-  });
+  await MongoClient.connect(url, async function(err, database) { 
+
+      var dbo = database.db("mydb");
+      dbo.listCollections().toArray(function(err, collections) {
+          var collectionExists = false;
+          if(!err && collections && collections.length>0){
+            var names = collections.map(a => a.name)
+            if (names.includes("notes")){
+              collectionExists = true
+            }
+          }
+
+          if (collectionExists) {
+            dbo.collection("notes").drop(function(err, delOK) {
+              if (err) throw err;
+              if (delOK) console.log("Collection notes deleted")
+            });
+          } 
+          
+          dbo.createCollection("notes", function(err, collection) {
+            console.log("Collection notes reseted!")
+          })
+
+          database.close();
+      });
+  })  
+
   res.end('Database created!')
+  
 }
