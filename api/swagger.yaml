@@ -4,7 +4,7 @@ info:
   description: "Very simplistic API to handle notes.\n"
   version: "0.0.1"
   title: "Notes"
-host: "localhost:9000"
+host: "localhost:8080"
 basePath: "/"
 schemes:
 - "http"

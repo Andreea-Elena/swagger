@@ -1,6 +1,6 @@
 'use strict';
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://0.0.0.0:27017/mydb";
+var url = "mongodb://mongo:27017/mydb";
 var ObjectId = require('mongodb').ObjectId; 
 
 exports.getAllNotes = function(args, res, next) {
