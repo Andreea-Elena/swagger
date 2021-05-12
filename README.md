@@ -1,10 +1,10 @@
 # Swagger server
 
 ### Running the server
-To run the server, run:
+To run the application, please use (will start mongoDB and a node.js server containers):
 
 ```
-npm start
+docker-compose up -d --build
 ```
 
 To view the Swagger UI interface:
@@ -13,9 +13,3 @@ To view the Swagger UI interface:
 open http://localhost:8080/docs
 ```
 
-The application also needs a mongodb in order to function, please run the following commands before starting
-
-```
-docker pull mongo 
-sudo docker run -it -v mongodata:/data/db -p 27017:27017 --name mongodb -d mongo
-```
