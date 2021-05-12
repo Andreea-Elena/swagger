@@ -6,8 +6,8 @@ var cors = require('cors');
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
+const router=require("./routes/routes");
 var serverPort = 8080;
-var dockerServerPort = 9000;
 
 // swaggerRouter configuration
 var options = {
@@ -32,13 +32,14 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Route validated requests to appropriate controller
   app.use(middleware.swaggerRouter(options));
+  app.use("/api", router);
 
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
 
   // Start the server
   http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d)', dockerServerPort, dockerServerPort);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', dockerServerPort);
+    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
   });
 });
