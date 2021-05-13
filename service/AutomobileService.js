@@ -4,111 +4,107 @@ var Parser = require('json2csv');
 exports.getAllDataCsv = function(args, res, next) {
     const fields = [
         {
-          label: 'Id',
-          value: '_id',
-        },
-        {
-          label: 'Symboling',
+          label: 'symboling',
           value: 'symboling',
         },
         {
-          label: 'Normalized losses',
+          label: 'normalized-losses',
           value: 'normalizedlosses',
         },
         {
-          label: 'Make',
+          label: 'make',
           value: 'make',
         },
         {
-          label: 'Fuel type',
+          label: 'fuel-type',
           value: 'fueltype',
         },
         {
-          label: 'Aspiration',
+          label: 'aspiration',
           value: 'aspiration',
         },
         {
-          label: 'Number of doors',
+          label: 'num-of-doors',
           value: 'numofdoors',
         },
         {
-          label: 'Body style',
+          label: 'body-style',
           value: 'bodystyle',
         },
         {
-          label: 'Drive wheels',
+          label: 'drive-wheels',
           value: 'drivewheels',
         },
         {
-          label: 'Engine location',
+          label: 'engine-location',
           value: 'enginelocation',
         },
         {
-          label: 'Wheel base',
+          label: 'wheel-base',
           value: 'wheelbase',
         },
         {
-          label: 'Length',
+          label: 'length',
           value: 'length',
         },
         {
-          label: 'Width',
+          label: 'width',
           value: 'width',
         },
         {
-          label: 'Height',
+          label: 'height',
           value: 'height',
         },
         {
-          label: 'Curb weight',
+          label: 'curb-weight',
           value: 'curbweight',
         },
         {
-          label: 'Engine type',
+          label: 'engine-type',
           value: 'enginetype',
         },
         {
-          label: 'Number of cylinders',
+          label: 'num-of-cylinders',
           value: 'numofcylinders',
         },
         {
-          label: 'Engine size',
+          label: 'engine-size',
           value: 'enginesize',
         },
         {
-          label: 'Fuel system',
+          label: 'fuel-system',
           value: 'fuelsystem',
         },
         {
-          label: 'Bore',
+          label: 'bore',
           value: 'bore',
         },
         {
-          label: 'Stroke',
+          label: 'stroke',
           value: 'stroke',
         },
         {
-          label: 'Compression ratio',
+          label: 'compression-ratio',
           value: 'compressionratio',
         },
         {
-          label: 'Horsepower',
+          label: 'horsepower',
           value: 'horsepower',
         },
         {
-          label: 'Peak rpm',
+          label: 'peak-rpm',
           value: 'peakrpm',
         },
         {
-          label: 'City mpg',
+          label: 'city-mpg',
           value: 'citympg',
         },
         {
-          label: 'Highway mpg',
+          label: 'highway-mpg',
           value: 'highwaympg',
         },
         {
-          label: 'Price',
+          label: 'price',
           value: 'price',
         }
     ];
