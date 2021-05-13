@@ -1,182 +1,88 @@
 'use strict';
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://mongo:27017/mydb";
+const Automobile = require('../models/Automobile');
 var ObjectId = require('mongodb').ObjectId; 
 
-exports.getAllNotes = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  **/
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 200;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    dbo.collection("notes").find({}).toArray(function(err, result) {
-      if (err) throw err;
-      res.end(JSON.stringify(result));
-      db.close();
-    });
-  }); 
+exports.getAllAutomobiles = function(args, res, next) {
+  Automobile.find({})
+  .then(automobiles => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(automobiles));
+  }, err => next(err))
+  .catch(err => next(err));
 }
 
-exports.postNote = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  * note (Note)
-  **/
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 201;
-
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myobj = { text: args.note.value.text }
-    dbo.collection("notes").insertOne(myobj, function(err, res) {
-      if (err) throw err;
-      console.log("1 note inserted");
-      db.close();
-    });
-    res.end(JSON.stringify(myobj))
-  }); 
+exports.postAutomobile = function(args, res, next) {
+  Automobile.create(args.automobile.value)
+  .then(automobile => {
+      console.log('Automobile Created ', automobile);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(automobile));
+  }, err => next(err))
+  .catch(err => next(err));
 }
 
-exports.getNotesById = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  * id (String)
-  * note (Note)
-  **/
+exports.getAutomobilesById = function(args, res, next) {
   if(args.id.value === '') {
   	 res.statusCode = 500;
   	 res.end('ID Required');
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 200;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var query = { _id : new ObjectId(args.id.value)  };
-    dbo.collection("notes").find(query).toArray(function(err, result) {
-      if (err) throw err;
-      res.end(JSON.stringify(result));
-      db.close();
-    });
-  }); 
+  Automobile.findById(args.id.value)
+    .then(automobile => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(automobile));
+    }, err => next(err))
+    .catch(err => next(err)); 
 }
 
-exports.putNotesById = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  * id (String)
-  * note (Note)
-  **/
+exports.putAutomobilesById = function(args, res, next) {
   if(args.id.value === '') {
   	 res.statusCode = 500;
   	 res.end('ID Required');
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 201;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myquery = { _id: new ObjectId(args.id.value) };
-    var newvalues = { $set: { text: args.note.value.text } };
-    dbo.collection("notes").updateOne(myquery, newvalues, function(err, res) {
-      if (err) throw err;
-      console.log("1 note updated");
-      db.close();
-    });
-    res.end()
-  }); 
+  Automobile.findByIdAndUpdate(args.id.value,
+    { $set: args.automobile.value }, 
+    { new: true }
+  )
+  .then(automobile => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(automobile));
+  }, err => next(err))
+  .catch(err => next(err));
 }
 
 
-exports.patchNotesById = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  * id (String)
-  * note (Note)
-  **/
+exports.patchAutomobilesById = function(args, res, next) {
+  if(args.id.value === '') {
+    res.statusCode = 500;
+    res.end('ID Required');
+ }
+ Automobile.findByIdAndUpdate(args.id.value,
+   { $set: args.automobile.value }, 
+   { new: true }
+ )
+ .then(automobile => {
+     res.statusCode = 200;
+     res.setHeader('Content-Type', 'application/json');
+     res.end(JSON.stringify(automobile));
+ }, err => next(err))
+ .catch(err => next(err));
+}
+
+exports.deleteAutomobilesById = function(args, res, next) {
   if(args.id.value === '') {
   	 res.statusCode = 500;
   	 res.end('ID Required');
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 201;
-
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myquery = { _id: new ObjectId(args.id.value) };
-    var newvalues = { $set: { text: args.note.value.text } };
-    dbo.collection("notes").updateOne(myquery, newvalues, function(err, res) {
-      if (err) throw err;
-      console.log("1 note updated");
-      db.close();
-    });
-    res.end()
-  }); 
+  Automobile.findByIdAndRemove(args.id.value)
+  .then(resp => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(resp));
+  }, err => next(err))
+  .catch(err => next(err));
 }
 
-exports.deleteNotesById = function(args, res, next) {
-  /**
-   * parameters expected in the args:
-  * id (String)
-  * note (Note)
-  **/
-  if(args.id.value === '') {
-  	 res.statusCode = 500;
-  	 res.end('ID Required');
-  }
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 204;
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myquery = { _id: new ObjectId(args.id.value) };
-    dbo.collection("notes").deleteOne(myquery, function(err, resp) {
-      if (err) res.end("Invalid id");
-      res.end("Note "+args.id.value+" deleted")
-      db.close();
-    });
-    res.end()
-  }); 
-}
-
-exports.getCreateDatabase = async function(req, res, next) {
-  /**
-  **/
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 204;
-
-  await MongoClient.connect(url, async function(err, database) { 
-
-      var dbo = database.db("mydb");
-      dbo.listCollections().toArray(function(err, collections) {
-          var collectionExists = false;
-          if(!err && collections && collections.length>0){
-            var names = collections.map(a => a.name)
-            if (names.includes("notes")){
-              collectionExists = true
-            }
-          }
-
-          if (collectionExists) {
-            dbo.collection("notes").drop(function(err, delOK) {
-              if (err) throw err;
-              if (delOK) console.log("Collection notes deleted")
-            });
-          } 
-          
-          dbo.createCollection("notes", function(err, collection) {
-            console.log("Collection notes reseted!")
-          })
-
-          database.close();
-      });
-  })  
-
-  res.end('Database created!')
-  
-}

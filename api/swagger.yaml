@@ -1,9 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  description: "Very simplistic API to handle notes.\n"
+  description: "Very simplistic API to handle automobiles.\n"
   version: "0.0.1"
-  title: "Notes"
+  title: "Automobiles"
 host: "localhost:8080"
 basePath: "/"
 schemes:
@@ -13,110 +13,201 @@ consumes:
 produces:
 - "application/json"
 paths:
-  /notes:
+  /automobiles:
     get:
-      operationId: "getAllNotes"
+      operationId: "getAllAutomobiles"
       parameters: []
       responses:
         "200":
-          description: "Get all notes"
+          description: "Get all automobiles"
       x-swagger-router-controller: "Default"
     post:
-      operationId: "postNote"
+      operationId: "postAutomobile"
       parameters:
       - in: "body"
-        name: "note"
-        description: "Text of the note we want to save"
-        required: false
+        name: "automobile"
+        description: "Body of the automobile we want to save"
+        required: true
         schema:
-          $ref: "#/definitions/Note"
+          $ref: "#/definitions/Automobile"
       responses:
         "201":
-          description: "Note was correctly created"
+          description: "Automobile was correctly created"
       x-swagger-router-controller: "Default"
-  /notes/{id}:
+  /automobiles/{id}:
     get:
-      operationId: "getNotesById"
+      operationId: "getAutomobilesById"
       parameters:
       - name: "id"
         in: "path"
-        description: "Id of the note."
+        description: "Id of the automobile."
         required: true
         type: "string"
       responses:
         "200":
-          description: "Note was fetched correctly"
+          description: "Automobile was fetched correctly"
         "404":
-          description: "Note wasn't found"
+          description: "Automobile wasn't found"
       x-swagger-router-controller: "Default"
     put:
-      operationId: "putNotesById"
+      operationId: "putAutomobilesById"
       parameters:
       - name: "id"
         in: "path"
-        description: "Id of the note."
+        description: "Id of the automobile."
         required: true
         type: "string"
       - in: "body"
-        name: "note"
-        description: "Text of the note we want to save"
+        name: "automobile"
+        description: "Body of the automobile we want to change"
         required: false
         schema:
-          $ref: "#/definitions/Note"
+          $ref: "#/definitions/Automobile"
       responses:
         "200":
-          description: "Note was replaced."
+          description: "Automobile was replaced."
         "500":
           description: "Internal server error"
       x-swagger-router-controller: "Default"
     delete:
-      operationId: "deleteNotesById"
+      operationId: "deleteAutomobilesById"
       parameters:
       - name: "id"
         in: "path"
-        description: "Id of the note."
+        description: "Id of the automobile."
         required: true
         type: "string"
       responses:
         "204":
-          description: "Note was deleted"
+          description: "Automobile was deleted"
         "404":
-          description: "Note missing"
+          description: "Automobile missing"
       x-swagger-router-controller: "Default"
     patch:
-      operationId: "patchNotesById"
+      operationId: "patchAutomobilesById"
       parameters:
       - name: "id"
         in: "path"
-        description: "Id of the note."
+        description: "Id of the automobile."
         required: true
         type: "string"
       - in: "body"
-        name: "note"
-        description: "Text of the note we want to save"
+        name: "automobile"
+        description: "Body of the automobile we want to change"
         required: false
         schema:
-          $ref: "#/definitions/Note"
+          $ref: "#/definitions/Automobile"
       responses:
         "200":
-          description: "Note was changed."
+          description: "Automobile was changed."
         "500":
           description: "Internal server error"
       x-swagger-router-controller: "Default"
-  /reset/database:
-    get:
-      operationId: "getCreateDatabase"
-      parameters: []
-      responses:
-        "204":
-          description: "Database created!"
-      x-swagger-router-controller: "Default"
 definitions:
-  Note:
+  Automobile:
     type: "object"
     properties:
-      text:
+      symboling:
+        type: "number"
+        description: "The symbol of the automobile"
+      normalizedlosses:
+        type: "number"
+      make:
         type: "string"
-        description: "The text of the note"
+        description: "The make of the automobile"
+      fueltype:
+        type: "string"
+        description: "The fuel type of the automobile"
+      aspiration:
+        type: "string"
+        description: "The aspiration of the automobile"
+      numofdoors:
+        type: "string"
+        description: "The number of doors of the automobile"
+      bodystyle:
+        type: "string"
+        description: "The body style of the automobile"
+      drivewheels:
+        type: "string"
+        description: "The number of drive wheels of the automobile"
+      enginelocation:
+        type: "string"
+        description: "The location of the engine of the automobile"
+      wheelbase:
+        type: "number"
+        description: "The base of the wheel of the automobile"
+      length:
+        type: "number"
+        description: "The length of the automobile"
+      width:
+        type: "number"
+        description: "The width of the automobile"
+      height:
+        type: "number"
+        description: "The height of the automobile"
+      curbweight:
+        type: "number"
+        description: "The curb weight of the automobile"
+      enginetype:
+        type: "string"
+        description: "The type of the engine of the automobile"
+      numofcylinders:
+        type: "string"
+        description: "The number of cylinders of the automobile"
+      enginesize:
+        type: "number"
+        description: "The engine size of the automobile"
+      fuelsystem:
+        type: "string"
+        description: "The fuel system of the automobile"
+      bore:
+        type: "number"
+        description: "The bore of the automobile"
+      stroke:
+        type: "number"
+        description: "The stroke of the automobile"
+      compressionratio:
+        type: "number"
+        description: "The compression ratio of the automobile"
+      horsepower:
+        type: "number"
+        description: "The horsepower of the automobile"
+      peakrpm:
+        type: "number"
+        description: "The peak rpm of the automobile"
+      citympg:
+        type: "number"
+        description: "The city mpg of the automobile"
+      highwaympg:
+        type: "number"
+        description: "The highway mpg of the automobile"
+      price:
+        type: "number"
+        description: "The price of the automobile"      
     example:
-      text: "text"
+      symboling: 2
+      normalizedlosses: 87
+      make: "dodge"
+      fueltype: "gas"
+      aspiration: "std"
+      numofdoors: "four"
+      bodystyle: "wagon"
+      drivewheels: "fwd"
+      enginelocation: "front"
+      wheelbase: 93.7
+      length: 156.9
+      width: 63.4
+      height: 53.7
+      curbweight: 2050
+      enginetype: "ohc"
+      numofcylinders: "three"
+      enginesize: 97
+      fuelsystem: "2bbl"
+      bore: 3.62
+      stroke: 2.36
+      compressionratio: 9.9
+      horsepower: 70
+      peakrpm: 4900
+      citympg: 31 
+      highwaympg: 36
+      price: 5118

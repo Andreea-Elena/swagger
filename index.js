@@ -7,7 +7,21 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
 const router=require("./routes/routes");
+const mongoose = require('mongoose');
+var config = require('./config');
 var serverPort = 8080;
+
+// connect to database
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+const url = config.mongoUrl;
+const connect = mongoose.connect(url);
+connect.then(db =>
+    { console.log("Connected to the database") }, 
+    err => { console.log(err)}
+);
 
 // swaggerRouter configuration
 var options = {
