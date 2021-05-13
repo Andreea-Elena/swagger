@@ -14,6 +14,7 @@ var serverPort = 8080;
 // connect to database
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 const url = config.mongoUrl;
 const connect = mongoose.connect(url);
